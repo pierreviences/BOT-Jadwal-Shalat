@@ -34,6 +34,14 @@ async function connectToWhatsApp() {
   sock.ev.on("messages.upsert", async (m) => {});
 }
 
+function processData(data: any) {
+  return `Waktu Shalat Hari ini
+  \n\nSubuh : ${processTime(data.fajr)}
+Dzuhur  : ${processTime(data.dhuhr)}
+Ashar   : ${processTime(data.asr)}
+Maghrib : ${processTime(data.maghrib)}
+Isya    : ${processTime(data.isha)}`;
+}
 function processTime(time: any) {
   return moment(time).tz("Asia/Jakarta").format("HH:mm") + " WIB";
 }
