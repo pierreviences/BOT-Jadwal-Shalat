@@ -8,7 +8,6 @@ import moment from "moment-timezone";
 async function connectToWhatsApp() {
   const { state, saveCreds } = await useMultiFileAuthState("auth");
   const sock = makeWASocket({
-    // can provide additional config here
     printQRInTerminal: true,
     auth: state,
   });
@@ -34,3 +33,9 @@ async function connectToWhatsApp() {
   });
   sock.ev.on("messages.upsert", async (m) => {});
 }
+
+function processTime(time: any) {
+  return moment(time).tz("Asia/Jakarta").format("HH:mm") + " WIB";
+}
+
+connectToWhatsApp();
