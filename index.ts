@@ -31,7 +31,24 @@ async function connectToWhatsApp() {
       console.log("opened connection");
     }
   });
-  sock.ev.on("messages.upsert", async (m) => {});
+  sock.ev.on("messages.upsert", async (m) => {
+    const msg = m.messages[0];
+    if (!msg.key.fromMe && m.type === "notify") {
+      if (msg.message?.locationMessage) {
+        const latitude = msg.message?.locationMessage.degreesLatitude;
+        const longtitude = msg.message?.locationMessage.degreesLongitude;
+        console.log("HAHAHA", m.messages[0].key.remoteJid);
+        const coordinates = new Coordinates(latitude!, longtitude!);
+        const params = CalculationMethod.MoonsightingCommittee();
+        const date = new Date();
+        const prayerTimes = new PrayerTimes(coordinates, date, params);
+        console.log(prayerTimes);
+        await sock.sendMessage(m.messages[0].key.remoteJid!, {
+          text: processData(prayerTimes),
+        });
+      }
+    }
+  });
 }
 
 function processData(data: any) {
